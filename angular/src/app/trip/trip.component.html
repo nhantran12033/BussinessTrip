@@ -1,0 +1,215 @@
+<div class="card">
+  <div class="card-header">
+    <div class="row">
+      <div class="col">
+        <h5 class="card-title">
+          {{ 'BUSINESS TRIP REQUEST' | abpLocalization }}
+        </h5>
+      </div>
+      <div class="text-lg-end pt-2">
+      </div>
+    </div>
+
+    <div style="border-top:solid 1px;margin-left: -25px;margin-right: -25px;padding:25px">
+      <div style="background-color: darkturquoise; height:30px;display:flex">
+        <h1 style="font-size: 15px; font-weight: bold; color: black; margin-top: auto;  margin-bottom: auto;">
+          PART 1: TRIP INFORMATION
+        </h1>
+      </div>
+      <form [formGroup]="form" class="formBody" (ngSubmit)="onSubmit()">
+        <div class="body">
+          <div class="item">
+            <label>Operater's Name</label> <br />
+            <input class="form-control" type="text" formControlName="operaterName" placeholder="Trần Hùng Thành Nhân" disabled />
+
+          </div>
+          <div class="item">
+            <label>Request Number </label><br />
+            <input class="form-control" type="text" formControlName="requestNumber" placeholder="BT-03-07-2023.XXX" disabled />
+          </div>
+          <div class="item">
+            <label>Requested Date</label><span> * </span>
+            <input #datepicker="ngbDatepicker"
+                   class="form-control"
+                   name="datepicker"
+                   formControlName="requestedDate"
+                   ngbDatepicker
+                   (click)="datepicker.toggle()" />
+          </div>
+          <div class="item">
+            <label>Legal Entity *</label><br />
+            <select formControlName="legalEntity">
+              <option></option>
+              <option *ngFor="let item of data" [value]="item.code">{{item.code}}</option>
+            </select>
+          </div>
+          <div class="item">
+            <label>Department *</label><br />
+            <select formControlName="department">
+              <option></option>
+              <option *ngFor="let item of depart" [value]="item.code">{{item.code}}</option>
+            </select>
+          </div>
+          <div class="item">
+            <label>Traveler’s / Verifier's Username *</label><br />
+            <select formControlName="verifierUsername">
+              <option></option>
+              <option *ngFor="let item of user" [value]="item">{{item}}</option>
+            </select>
+          </div>
+          <div class="item">
+            <label>Expense Code *</label><br />
+            <select formControlName="expenseCode">
+              <option></option>
+              <option *ngFor="let item of expense" [value]="item.code">{{item.code}}</option>
+            </select>
+          </div>
+          <div class="item">
+            <label>Business Type *</label><br />
+            <select formControlName="businessType">
+              <option></option>
+              <option *ngFor="let item of type" [value]="item">{{item}}</option>
+            </select>
+          </div>
+
+          <div class="item">
+            <label>Traveler’s / Verifier's Name</label><br />
+            <input class="form-control" type="text" formControlName="verifierName" disabled />
+          </div>
+          <div class="item-1">
+            <label>
+              Note
+              <span style="font-size:9px">(Max 999 charcters)</span>
+            </label><br />
+            <input type="text" formControlName="notes" />
+          </div>
+        </div>
+        <div class="body-1">
+          <div class="header">
+            <h1 style="font-size: 15px; font-weight: bold; color: black; margin-top: auto;  margin-bottom: auto;">
+              PART 2: TRIP EXPENSES
+            </h1>
+          </div>
+          <div class="module">
+            <div>
+              <label style="color: black">Total Amount:</label>
+              <input style="margin-left:10px;padding-left:3px;padding-right:3px;text-align:center;background-color:gainsboro" formControlName="totalAmount" />
+            </div>
+          </div>
+        </div>
+        <div class="body-2" formArrayName="tripExpenseDetail" *ngFor="let item of tripExpenseDetail.controls; let i=index" >
+          <div class="form-body" formGroupName="{{i}}">
+            <div class="form-body-header">Trip {{i+1}} <button class="btn-primary" (click)="RemoveNewTrip(i)"><i class="fa fa-trash"></i></button></div>
+            <div class="form-item">
+              <div class="item-2">
+                <label>Purpose *<span>(Max 3999 characters)</span></label> <br />
+                <input formControlName="purpose" />
+              </div>
+              <div class="item-2">
+                <label>Destination *<span>(Max 3999 characters)</span></label><br />
+                <input formControlName="destination" />
+              </div>
+              <div class="item-3">
+                <label>Check-in time *</label><span> (dd-mm-yyyy) </span><br />
+                <input #checkinTime="ngbDatepicker"
+                       name="checkinTime"
+                       ngbDatepicker
+                       formControlName="checkinTime"
+                       (click)="checkinTime.toggle()" />
+              </div>
+              <div class="item-3">
+                <label>Check-out time *</label><span> (dd-mm-yyyy) </span><br />
+                <input #checkinOut="ngbDatepicker"
+                       name="checkinOut"
+                       ngbDatepicker
+                       formControlName="checkoutTime"
+                       (click)="checkinOut.toggle()" />
+
+              </div>
+              <div class="item-3">
+                <label>Total nights</label><br />
+
+                <input type="number" formControlName="totalNights" placeholder="0 night" />
+              </div>
+            </div>
+            <div class="form-table">
+              <table border="1">
+                <thead>
+
+                  <tr>
+                    <th>
+                      Item <span>*</span> <br />
+                      <span style="font-size:9px">(Max 999 chacters)</span>
+                    </th>
+                    <th>Specification <br /><span style="font-size:9px">(Max 999 chacters)</span></th>
+                    <th>Original Currency <span>*</span></th>
+                    <th>Original Unit <span>*</span></th>
+                    <th>Volume <span>*</span></th>
+                    <th>Original Amount</th>
+                    <th>Equivalent in VND</th>
+                    <th>Notes <br /><span style="font-size:9px">(Max 999 chacters)</span></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>
+                      <input style="height:90px;width:120px" formControlName="item" />
+                    </td>
+                    <td>
+                      <input style="height: 90px; width: 120px" formControlName="specification" />
+                    </td>
+                    <td>
+                      <select style="width:120px; height:25px" formControlName="originalCurrency" (change)="onSelectCode(i,$event.target.value)">
+                        <option></option>
+                        <option *ngFor="let item of currency" [value]="item.code">{{item.code}}</option>
+                      </select>
+                    </td>
+
+                    <td>
+                      <input type="number" style="width:120px" (change)="calculateTotalAmount(i)" formControlName="originalUnit" />
+                    </td>
+                    <td>
+                      <input type="number" style="width:120px" (change)="calculateTotalAmount(i)" formControlName="volume" />
+                    </td>
+                    <td>
+                      <input type="number" style="width: 120px; text-align: right;" formControlName="originalAmount" />
+                    </td>
+                    <td>
+                      <input type="number" style="width: 120px; text-align: right " formControlName="equivalentInVND" />
+                    </td>
+                    <td>
+                      <input style="height: 80px; width: 115px" formControlName="notes" />
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            
+          </div>
+        </div>
+        
+      </form>
+    </div>
+
+    <div class="button-module">
+      <div class="new-trip">
+        <button class="btn btn-primary" (click)="AddNewTrip()">
+          <span>{{ "::Add new trip" | abpLocalization }}</span>
+        </button>
+      </div>
+      <div class="new-trip">
+        <button class="btn btn-primary" (click)="onSubmit()">
+          <i class="fa fa-check mr-1"></i>
+          {{ '::Save' | abpLocalization }}
+        </button>
+
+        <button class="btn btn-primary">
+          <span>{{ "::Back" | abpLocalization }}</span>
+        </button>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
